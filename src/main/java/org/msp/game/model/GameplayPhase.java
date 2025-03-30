@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameplayPhase extends JPanel implements ActionListener {
@@ -13,6 +14,7 @@ public class GameplayPhase extends JPanel implements ActionListener {
     private Image background;
     private Player player;
     private Timer timer;
+    private List<Enemies> enemies;
 
     public GameplayPhase() {
         setFocusable(true);
@@ -28,6 +30,19 @@ public class GameplayPhase extends JPanel implements ActionListener {
 
         timer = new Timer(1, this);
         timer.start();
+
+        enimiesInicialize();
+    }
+    // Cria inimigos em posições de altura e largura randomicas
+    public void enimiesInicialize() {
+        int coordenades[] = new int[60];
+        enemies = new ArrayList<Enemies>();
+
+        for (int i = 0; i < coordenades.length; i++) {
+            int x = (int)(Math.random() * 8000+1600);
+            int y = (int)(Math.random() * 650+30);
+            enemies.add(new Enemies(x, y));
+        }
     }
 
     // Renderiza os elementos do jogo na tela
@@ -43,6 +58,13 @@ public class GameplayPhase extends JPanel implements ActionListener {
             a.load();
             graphics.drawImage(a.getImage(), a.getX(), a.getY(), this);
         }
+
+        for (int j = 0; j < enemies.size(); j++){
+            Enemies in = enemies.get(j);
+            in.load();
+            graphics.drawImage(in.getImage(), in.getX(), in.getY(), this);
+        }
+
         g.dispose();
     }
 
@@ -57,6 +79,15 @@ public class GameplayPhase extends JPanel implements ActionListener {
                 a.update();
             } else {
                 attack.remove(i);
+            }
+        }
+
+        for (int j = 0; j < enemies.size(); j++){
+            Enemies in = enemies.get(j);
+            if(in.isVisible()){
+                in.update();
+            } else {
+                enemies.remove(j);
             }
         }
 
