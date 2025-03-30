@@ -3,17 +3,22 @@ package org.msp.game.model;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
     private int x, y;
     private int dx, dy;
     private Image image;
     private int width, height;
+    private List<Attack> attack;
 
     // Posição inicial do player
     public Player() {
         this.x = 100;
         this.y = 100;
+
+        attack = new ArrayList<Attack>();
     }
 
     // Carrega a imagem do personagem
@@ -30,9 +35,18 @@ public class Player {
         y += dy;
     }
 
+    // Método para atacar
+    public void simpleAttack() {
+        this.attack.add(new Attack(x + width, y + (height / 2)));
+    }
+
     // Recebe tecla apertada e atualiza o valor do personagem
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
+
+        if (code == KeyEvent.VK_SPACE) {
+            simpleAttack();
+        }
 
         if (code == KeyEvent.VK_W) {
             dy = -10;
@@ -82,5 +96,9 @@ public class Player {
 
     public Image getImage() {
         return image;
+    }
+
+    public List<Attack> getAttack() {
+        return attack;
     }
 }

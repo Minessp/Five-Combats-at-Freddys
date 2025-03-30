@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 public class GameplayPhase extends JPanel implements ActionListener {
 
@@ -33,13 +34,32 @@ public class GameplayPhase extends JPanel implements ActionListener {
     public void paint(Graphics g) {
         Graphics2D graphics = (Graphics2D) g;
         graphics.drawImage(background, 0, 0, null);
-        graphics.drawImage(player.getImage(), player.getX(), player.getY(), null);
+        graphics.drawImage(player.getImage(), player.getX(), player.getY(), this);
+
+        List<Attack> attack = player.getAttack();
+
+        for (int i = 0; i < attack.size(); i++){
+            Attack a = attack.get(i);
+            a.load();
+            graphics.drawImage(a.getImage(), a.getX(), a.getY(), this);
+        }
         g.dispose();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         player.update();
+        List<Attack> attack = player.getAttack();
+
+        for (int i = 0; i < attack.size(); i++){
+            Attack a = attack.get(i);
+            if(a.isVisible()){
+                a.update();
+            } else {
+                attack.remove(i);
+            }
+        }
+
         repaint();
     }
 
