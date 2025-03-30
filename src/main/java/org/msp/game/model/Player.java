@@ -12,11 +12,13 @@ public class Player {
     private Image image;
     private int width, height;
     private List<Attack> attack;
+    private boolean isVisible;
 
     // Posição inicial do player
     public Player() {
         this.x = 100;
         this.y = 100;
+        isVisible = true;
 
         attack = new ArrayList<Attack>();
     }
@@ -38,6 +40,11 @@ public class Player {
     // Método para atacar
     public void simpleAttack() {
         this.attack.add(new Attack(x + width, y + (height / 2)));
+    }
+
+    // Define o retângulo de colisão
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, width, height);
     }
 
     // Recebe tecla apertada e atualiza o valor do personagem
@@ -84,6 +91,14 @@ public class Player {
         if (code == KeyEvent.VK_D) {
             dx = 0;
         }
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
     }
 
     public int getX() {

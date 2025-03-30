@@ -35,6 +35,11 @@ public class Attack {
         }
     }
 
+    // Define o retângulo de colisão
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, width, height);
+    }
+
     public int getX() {
         return x;
     }

@@ -15,6 +15,7 @@ public class GameplayPhase extends JPanel implements ActionListener {
     private Player player;
     private Timer timer;
     private List<Enemies> enemies;
+    private boolean inGame;
 
     public GameplayPhase() {
         setFocusable(true);
@@ -32,6 +33,7 @@ public class GameplayPhase extends JPanel implements ActionListener {
         timer.start();
 
         enimiesInicialize();
+        inGame = true;
     }
     // Cria inimigos em posições de altura e largura randomicas
     public void enimiesInicialize() {
@@ -48,21 +50,26 @@ public class GameplayPhase extends JPanel implements ActionListener {
     // Renderiza os elementos do jogo na tela
     public void paint(Graphics g) {
         Graphics2D graphics = (Graphics2D) g;
-        graphics.drawImage(background, 0, 0, null);
-        graphics.drawImage(player.getImage(), player.getX(), player.getY(), this);
+        if (inGame) {
+            graphics.drawImage(background, 0, 0, null);
+            graphics.drawImage(player.getImage(), player.getX(), player.getY(), this);
 
-        List<Attack> attack = player.getAttack();
+            List<Attack> attack = player.getAttack();
 
-        for (int i = 0; i < attack.size(); i++){
-            Attack a = attack.get(i);
-            a.load();
-            graphics.drawImage(a.getImage(), a.getX(), a.getY(), this);
-        }
+            for (int i = 0; i < attack.size(); i++){
+                Attack a = attack.get(i);
+                a.load();
+                graphics.drawImage(a.getImage(), a.getX(), a.getY(), this);
+            }
 
-        for (int j = 0; j < enemies.size(); j++){
-            Enemies in = enemies.get(j);
-            in.load();
-            graphics.drawImage(in.getImage(), in.getX(), in.getY(), this);
+            for (int i = 0; i < enemies.size(); i++){
+                Enemies in = enemies.get(i);
+                in.load();
+                graphics.drawImage(in.getImage(), in.getX(), in.getY(), this);
+            }
+        } else {
+            ImageIcon ref = new ImageIcon("src//images//gameover//GameOver.jpg");
+            graphics.drawImage(ref.getImage(), 0, 0, null);
         }
 
         g.dispose();
@@ -90,8 +97,40 @@ public class GameplayPhase extends JPanel implements ActionListener {
                 enemies.remove(j);
             }
         }
-
+        checkColisions();
         repaint();
+    }
+
+    public void checkColisions() {
+        Rectangle animatronicFormat = player.getBounds();
+        Rectangle enemiesFormat;
+        Rectangle attackFormat;
+
+        // Checa colisões entre o player e o inimigo
+        for(int i = 0; i < enemies.size(); i++){
+            Enemies temporarilyEnemy = enemies.get(i);
+            enemiesFormat = temporarilyEnemy.getBounds();
+            if(animatronicFormat.intersects(enemiesFormat)){
+                player.setVisible(false);
+                temporarilyEnemy.setVisible(false);
+                inGame = false;
+            }
+        }
+
+        // Checa colisões entre o ataque e o inimigo
+        List<Attack> attacks = player.getAttack();
+        for (int i = 0; i < attacks.size(); i++){
+            Attack temporarilyAttack = attacks.get(i);
+            attackFormat = temporarilyAttack.getBounds();
+            for(int j = 0; j < enemies.size(); j++){
+                Enemies temporarilyEnemy = enemies.get(j);
+                enemiesFormat = temporarilyEnemy.getBounds();
+                if(attackFormat.intersects(enemiesFormat)){
+                    temporarilyEnemy.setVisible(false);
+                    temporarilyAttack.setVisible(false);
+                }
+            }
+        }
     }
 
     private class KeyboardAdapter extends KeyAdapter {
