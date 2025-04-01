@@ -24,5 +24,5 @@ Esse é um MEME Game, sem fins lucrativos, desenvolvido para iniciar o aprendiza
 [![Instagram](https://skillicons.dev/icons?i=instagram&theme=dark)](https://www.instagram.com/minesssp/)
 
 ## Tecnologias usadas:
-[![My Skills](https://skillicons.dev/icons?i=java,idea&theme=dark)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=java,idea&theme=dark)](https://www.java.com/pt-BR/)
 
